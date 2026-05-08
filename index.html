@@ -453,14 +453,16 @@ footer{background:var(--dark);padding:80px 60px 50px;color:white;display:grid;gr
         <div class="contact-step"><span class="contact-step-num">03</span><span class="contact-step-line"></span><span class="contact-step-label">Strategy &amp; Launch</span></div>
       </div>
     </div>
-    <form class="contact-form" onsubmit="handleSubmit(event)">
+    <form class="contact-form" action="https://formspree.io/f/xvzlwpgd" method="POST">
       <div class="form-row">
-        <div class="form-group"><label>Your Name <span class="req">*</span></label><input type="text" placeholder="Jane Doe" required></div>
-        <div class="form-group"><label>Email <span class="req">*</span></label><input type="email" placeholder="jane@brand.com" required></div>
+        <div class="form-group"><label>Your Name <span class="req">*</span></label><input type="text" name="name" placeholder="Diana Musau" required></div>
+        <div class="form-group"><label>Email <span class="req">*</span></label><input type="email" name="email" placeholder="diana@brand.com" required></div>
       </div>
-      <div class="form-group"><label>Company / Brand</label><input type="text" placeholder="Your brand name"></div>
-      <div class="form-group"><label>Project Type <span class="req">*</span></label><div class="project-types"><button type="button" class="pt-btn" onclick="this.classList.toggle('sel')">Brand Strategy</button><button type="button" class="pt-btn" onclick="this.classList.toggle('sel')">Campaign Launch</button><button type="button" class="pt-btn" onclick="this.classList.toggle('sel')">Content Strategy</button><button type="button" class="pt-btn" onclick="this.classList.toggle('sel')">Email &amp; CRM</button><button type="button" class="pt-btn" onclick="this.classList.toggle('sel')">Social &amp; Community</button><button type="button" class="pt-btn" onclick="this.classList.toggle('sel')">SEO / GEO</button><button type="button" class="pt-btn" onclick="this.classList.toggle('sel')">Other</button></div></div>
-      <div class="form-group"><label>Tell me about your project <span class="req">*</span></label><textarea placeholder="What are you working on? What's the goal?" required></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label>Phone Number</label><input type="tel" name="phone" placeholder="+254 700 000 000"></div>
+        <div class="form-group"><label>Company / Brand</label><input type="text" name="company" placeholder="Your brand name"></div>
+      </div>
+      <div class="form-group"><label>Tell me about your project <span class="req">*</span></label><textarea name="message" placeholder="What are you working on? What's the goal?" required></textarea></div>
       <button type="submit" class="form-submit">Send Brief →</button>
     </form>
   </div>
