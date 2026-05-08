@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diana Musau — Marketing & Content Strategist</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#F5F0E8;--dark:#1C1C1A;--orange:#E8511A;--text-muted:#6B6B65;--border:rgba(28,28,26,0.1);}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark);overflow-x:hidden;cursor:none;}
+
+/* CURSOR */
+#cursor{position:fixed;width:12px;height:12px;background:var(--orange);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s;mix-blend-mode:multiply;}
+#cursor-ring{position:fixed;width:40px;height:40px;border:1.5px solid var(--orange);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);opacity:.5;}
+a:hover~#cursor,button:hover~#cursor{width:22px;height:22px;}
+
+/* LOADER */
+#loader{position:fixed;inset:0;background:var(--dark);z-index:10000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px;transition:opacity .8s,visibility .8s;}
+#loader.hide{opacity:0;visibility:hidden;}
+.loader-name{font-family:'Playfair Display',serif;font-size:clamp(2rem,6vw,4rem);font-weight:900;color:white;overflow:hidden;}
+.loader-name .lc{display:inline-block;opacity:0;transform:translateY(100%);animation:lcIn .5s ease forwards;}
+@keyframes lcIn{to{opacity:1;transform:none;}}
+.loader-sub{font-size:.72rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.35);}
+.loader-bar{width:220px;height:2px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden;}
+.loader-bar-fill{height:100%;background:var(--orange);width:0;animation:lbFill 1.9s ease forwards;}
+@keyframes lbFill{to{width:100%;}}
+
+/* PROGRESS */
+#progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--orange),#ff9060);z-index:200;width:0;transition:width .08s;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:22px 60px;transition:all .4s;}
+nav.scrolled{background:rgba(245,240,232,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'DM Sans',sans-serif;font-size:1.1rem;font-weight:500;text-decoration:none;color:var(--dark);}
+.nav-logo em{color:var(--orange);font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:600;font-size:1.2rem;}
+.nav-links{display:flex;gap:40px;list-style:none;}
+.nav-links a{font-size:.72rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;color:var(--dark);position:relative;}
+.nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;right:100%;height:1.5px;background:var(--orange);transition:right .3s;}
+.nav-links a:hover::after{right:0;}
+.nav-cta{background:var(--orange);color:white!important;padding:10px 22px;border-radius:50px;transition:background .2s,transform .2s,box-shadow .2s!important;}
+.nav-cta:hover{background:var(--dark)!important;transform:translateY(-2px)!important;}
+.nav-cta::after{display:none!important;}
+
+/* MARQUEE */
+.marquee-bar{background:var(--orange);padding:11px 0;overflow:hidden;}
+.marquee-track{display:flex;animation:mScroll 16s linear infinite;width:max-content;}
+.marquee-track span{font-size:.7rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:white;padding:0 36px;}
+.marquee-track span.dot{padding:0 8px;opacity:.4;}
+@keyframes mScroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* HERO */
+#home{min-height:100vh;padding:130px 60px 80px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;position:relative;overflow:hidden;}
+.particle{position:absolute;border-radius:50%;pointer-events:none;animation:pFloat linear infinite;opacity:.12;}
+@keyframes pFloat{0%{transform:translateY(110vh) rotate(0deg);opacity:0;}10%{opacity:.12;}90%{opacity:.12;}100%{transform:translateY(-120px) rotate(720deg);opacity:0;}}
+.hero-images{position:relative;height:580px;}
+.hero-blob{position:absolute;left:165px;top:55px;width:220px;height:220px;background:var(--orange);opacity:.9;z-index:0;animation:blobMorph 9s ease-in-out infinite;}
+@keyframes blobMorph{0%,100%{border-radius:50% 50% 50% 0;}25%{border-radius:60% 40% 70% 30%;}50%{border-radius:40% 60% 30% 70%;}75%{border-radius:70% 30% 60% 40%;}}
+.hero-img-main{position:absolute;left:0;top:30px;width:305px;height:425px;object-fit:cover;border-radius:4px;box-shadow:20px 20px 60px rgba(0,0,0,.13);z-index:1;animation:hFloat 6s ease-in-out infinite;transition:transform .4s;}
+.hero-img-main:hover{transform:scale(1.04) rotate(-1.5deg) translateY(-8px)!important;}
+@keyframes hFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
+.hero-img-secondary{position:absolute;left:182px;top:212px;width:222px;height:272px;object-fit:cover;border-radius:16px;box-shadow:20px 20px 50px rgba(0,0,0,.18);border:4px solid white;z-index:2;animation:hFloat2 7s ease-in-out infinite;transition:transform .4s;}
+.hero-img-secondary:hover{transform:scale(1.06) rotate(2deg)!important;}
+@keyframes hFloat2{0%,100%{transform:translateY(0) rotate(2deg);}50%{transform:translateY(-9px) rotate(-1deg);}}
+.hero-text{padding-left:20px;}
+.hero-location{font-size:.8rem;letter-spacing:.1em;color:var(--text-muted);margin-bottom:24px;opacity:0;transform:translateY(18px);transition:opacity .7s .2s,transform .7s .2s;}
+.hero-location.v{opacity:1;transform:none;}
+.hero-headline{font-family:'Playfair Display',serif;font-size:clamp(3.5rem,6vw,5.5rem);font-weight:900;line-height:.92;letter-spacing:-.02em;margin-bottom:20px;}
+.hw{display:inline-block;opacity:0;transform:translateY(60px) skewY(4deg);transition:opacity .65s,transform .65s;}
+.hw.v{opacity:1;transform:none;}
+.orange{color:var(--orange);}
+.hero-tagline{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.35rem;color:var(--orange);margin-bottom:24px;line-height:1.4;opacity:0;transform:translateX(-22px);transition:opacity .7s .9s,transform .7s .9s;}
+.hero-tagline.v{opacity:1;transform:none;}
+.hero-desc{font-size:.95rem;line-height:1.7;color:var(--text-muted);max-width:440px;margin-bottom:40px;opacity:0;transition:opacity .7s 1.1s;}
+.hero-desc.v{opacity:1;}
+.hero-desc strong{color:var(--dark);}
+.hero-cta{display:inline-flex;align-items:center;gap:10px;font-size:.75rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;color:var(--dark);border-bottom:1.5px solid var(--dark);padding-bottom:4px;opacity:0;transition:opacity .7s 1.3s,gap .3s,color .2s,border-color .2s;}
+.hero-cta.v{opacity:1;}
+.hero-cta:hover{color:var(--orange);border-color:var(--orange);gap:18px;}
+
+/* SHARED */
+section{padding:100px 60px;}
+.section-label{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--orange);margin-bottom:20px;font-weight:500;opacity:0;transform:translateX(-18px);transition:opacity .6s,transform .6s;}
+.section-label.v{opacity:1;transform:none;}
+.section-heading{font-family:'Playfair Display',serif;font-size:clamp(2.4rem,4vw,3.8rem);font-weight:700;line-height:1.1;margin-bottom:40px;opacity:0;transform:translateY(28px);transition:opacity .7s,transform .7s;}
+.section-heading.v{opacity:1;transform:none;}
+.section-heading .italic{font-style:italic;color:var(--orange);}
+
+/* ABOUT */
+#about{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;background:white;}
+.about-text p{font-size:.97rem;line-height:1.8;color:#444;margin-bottom:20px;opacity:0;transform:translateY(18px);transition:opacity .6s,transform .6s;}
+.about-text p.v{opacity:1;transform:none;}
+.about-text p em{font-style:italic;color:var(--dark);}
+.about-image{width:100%;max-width:500px;height:560px;object-fit:cover;border-radius:16px;box-shadow:30px 30px 80px rgba(0,0,0,.1);opacity:0;transform:translateX(40px) scale(.97);transition:opacity .8s,transform .8s;}
+.about-image.v{opacity:1;transform:none;}
+.stats-row{display:flex;gap:48px;margin-top:36px;opacity:0;transform:translateY(18px);transition:opacity .6s .4s,transform .6s .4s;}
+.stats-row.v{opacity:1;transform:none;}
+.stat-num{font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;color:var(--orange);line-height:1;}
+.stat-label{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-top:4px;}
+
+/* SKILLS */
+#skills{background:var(--cream);}
+.skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:20px;}
+.skill-card{border-radius:16px;overflow:hidden;background:white;opacity:0;transform:translateY(36px) scale(.97);transition:opacity .6s,transform .6s,box-shadow .3s;cursor:default;}
+.skill-card.v{opacity:1;transform:none;}
+.skill-card:hover{transform:translateY(-10px) scale(1.02)!important;box-shadow:0 28px 70px rgba(0,0,0,.13);}
+.skill-card:nth-child(2) .skill-title,.skill-card:nth-child(5) .skill-title{color:var(--orange);}
+.skill-card-img-placeholder{width:100%;height:200px;display:flex;align-items:center;justify-content:center;font-size:3.5rem;background:linear-gradient(135deg,#e8e0d0,#d4c8b8);transition:transform .4s;}
+.skill-card:hover .skill-card-img-placeholder{transform:scale(1.07);}
+.skill-num{display:inline-block;font-size:.72rem;font-weight:500;background:var(--dark);color:white;padding:3px 10px;border-radius:4px;margin:20px 20px 10px;}
+.skill-body{padding:0 20px 24px;}
+.skill-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;margin-bottom:10px;}
+.skill-desc{font-size:.87rem;color:var(--text-muted);line-height:1.6;}
+
+/* EMAIL ARCH */
+#email-arch{background:var(--dark);color:white;padding:100px 60px;}
+.arch-step{display:grid;grid-template-columns:80px 200px 1fr;gap:40px;align-items:start;padding:40px 0;border-bottom:1px solid rgba(255,255,255,.07);opacity:0;transform:translateX(-28px);transition:opacity .6s,transform .6s;}
+.arch-step.v{opacity:1;transform:none;}
+.arch-step:last-child{border-bottom:none;}
+.arch-num{font-family:'Playfair Display',serif;font-size:3.5rem;font-weight:900;color:var(--orange);line-height:1;transition:transform .3s;}
+.arch-step:hover .arch-num{transform:scale(1.15) rotate(-6deg);}
+.arch-step-title{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:white;margin-bottom:4px;}
+.arch-step-sub{font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.3);}
+.arch-step-desc{font-size:.92rem;color:rgba(255,255,255,.6);line-height:1.7;margin-bottom:16px;}
+.arch-tags{display:flex;flex-wrap:wrap;gap:8px;}
+.arch-tag{font-size:.75rem;padding:5px 14px;border:1px solid rgba(255,255,255,.18);border-radius:50px;color:rgba(255,255,255,.55);transition:all .2s;cursor:default;}
+.arch-tag:hover{background:var(--orange);border-color:var(--orange);color:white;}
+
+/* TOOLS */
+#tools{background:white;overflow:hidden;}
+.tools-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;color:var(--orange);margin-bottom:50px;}
+.tools-scroll-wrap{margin:0 -60px;overflow:hidden;}
+.tools-row{display:flex;gap:20px;padding:10px 0;width:max-content;animation:tScroll 22s linear infinite;}
+.tools-row.rev{animation:tScrollRev 25s linear infinite;}
+@keyframes tScroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+@keyframes tScrollRev{from{transform:translateX(-50%);}to{transform:translateX(0);}}
+.tool-card{background:var(--cream);border-radius:14px;padding:24px 18px 18px;display:flex;flex-direction:column;align-items:center;gap:10px;min-width:132px;flex-shrink:0;border:1.5px solid transparent;transition:transform .3s,box-shadow .3s,border-color .3s,background .3s;cursor:default;}
+.tool-card:hover{transform:translateY(-10px) scale(1.06);box-shadow:0 20px 50px rgba(0,0,0,.1);border-color:var(--orange);background:white;}
+.tool-icon{font-size:2.2rem;transition:transform .3s;}
+.tool-card:hover .tool-icon{transform:rotate(-12deg) scale(1.25);}
+.tool-name{font-size:.82rem;color:var(--text-muted);text-align:center;}
+
+/* EXPERIENCE */
+#experience{background:var(--cream);}
+.exp-layout{display:grid;grid-template-columns:320px 1fr;gap:60px;align-items:start;}
+.exp-sidebar{display:flex;flex-direction:column;gap:12px;}
+.exp-tab{display:flex;align-items:center;justify-content:space-between;padding:20px 22px;border-radius:12px;cursor:pointer;opacity:0;transform:translateX(-18px);}
+.exp-tab.v{opacity:1;transform:none;}
+.exp-tab.active{background:var(--dark);}
+.exp-tab:not(.active){background:white;transition:background .25s,transform .25s;}
+.exp-tab:not(.active):hover{background:#ede8df;transform:translateX(5px)!important;}
+.exp-tab-left{display:flex;align-items:center;gap:14px;}
+.exp-tab-icon{width:40px;height:40px;border-radius:8px;background:var(--orange);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;transition:transform .3s;}
+.exp-tab:hover .exp-tab-icon{transform:rotate(-8deg);}
+.exp-tab-name{font-size:.95rem;font-weight:600;}
+.exp-tab-role{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;margin-top:2px;}
+.exp-tab.active .exp-tab-name,.exp-tab.active .exp-tab-role{color:white;}
+.exp-tab:not(.active) .exp-tab-name{color:var(--dark);}
+.exp-tab:not(.active) .exp-tab-role{color:var(--text-muted);}
+.exp-tab.active .exp-tab-role{color:var(--orange);}
+.exp-arrow{font-size:1.1rem;transition:transform .3s;}
+.exp-tab.active .exp-arrow{color:white;}
+.exp-tab:not(.active) .exp-arrow{color:var(--text-muted);}
+.exp-tab:hover .exp-arrow{transform:translateX(5px);}
+.exp-entry{display:none;animation:expIn .4s ease;}
+.exp-entry.active{display:block;}
+@keyframes expIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+.exp-meta{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;}
+.exp-company{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;margin-bottom:6px;}
+.exp-position{font-size:1rem;color:var(--orange);font-weight:500;margin-bottom:28px;}
+.exp-bullets{list-style:none;display:flex;flex-direction:column;gap:14px;}
+.exp-bullets li{display:flex;gap:14px;font-size:.93rem;line-height:1.65;color:#444;opacity:0;transform:translateX(14px);animation:bIn .4s ease forwards;}
+@keyframes bIn{to{opacity:1;transform:none;}}
+.exp-bullets li::before{content:'•';color:var(--orange);font-size:1.2rem;flex-shrink:0;line-height:1.5;}
+
+/* WORK */
+#work{background:var(--dark);}
+#work .section-label,#work .section-heading{color:rgba(255,255,255,.9);}
+#work .section-label{color:var(--orange)!important;}
+.work-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.work-card{position:relative;border-radius:16px;overflow:hidden;cursor:pointer;opacity:0;transform:translateY(28px) scale(.97);transition:opacity .6s,transform .6s;}
+.work-card.v{opacity:1;transform:none;}
+.work-card-placeholder{width:100%;height:340px;display:flex;align-items:center;justify-content:center;font-size:5rem;transition:transform .5s;}
+.work-card:hover .work-card-placeholder{transform:scale(1.08);}
+.work-card-overlay{position:absolute;bottom:0;left:0;right:0;padding:28px;background:linear-gradient(transparent,rgba(0,0,0,.88));transform:translateY(6px);transition:transform .3s;}
+.work-card:hover .work-card-overlay{transform:none;}
+.work-card-client{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:8px;}
+.work-card-title{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:white;margin-bottom:14px;line-height:1.2;}
+.work-card-tags{display:flex;flex-wrap:wrap;gap:8px;}
+.work-tag{font-size:.67rem;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border:1px solid rgba(255,255,255,.3);border-radius:50px;color:rgba(255,255,255,.7);transition:all .2s;}
+.work-card:hover .work-tag{background:var(--orange);border-color:var(--orange);color:white;}
+.work-badge{position:absolute;top:20px;right:20px;background:var(--orange);color:white;font-size:.68rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:5px 12px;border-radius:50px;animation:badgePulse 2.5s ease infinite;}
+@keyframes badgePulse{0%,100%{box-shadow:0 0 0 0 rgba(232,81,26,.5);}50%{box-shadow:0 0 0 10px rgba(232,81,26,0);}}
+.work-badge-alt{background:rgba(255,255,255,.15);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.25);animation:none;}
+.wc-1{background:linear-gradient(135deg,#2a2010,#1a1008);}
+.wc-2{background:linear-gradient(135deg,#1a1a2e,#16213e);}
+.wc-3{background:linear-gradient(135deg,#1a2e1a,#0d1f0d);}
+.wc-4{background:linear-gradient(135deg,#2e1a1a,#1f0d0d);}
+.wc-5{background:linear-gradient(135deg,#1c1c10,#2a2818);}
+
+/* CONTACT */
+#contact{background:var(--cream);}
+.contact-layout{display:grid;grid-template-columns:1fr 1.2fr;gap:80px;align-items:start;}
+.contact-desc{font-size:.93rem;color:var(--text-muted);line-height:1.7;margin-bottom:40px;}
+.contact-process{display:flex;flex-direction:column;gap:14px;}
+.contact-step{display:flex;gap:14px;align-items:center;}
+.contact-step-num{font-size:.72rem;color:var(--orange);font-weight:500;width:28px;flex-shrink:0;}
+.contact-step-line{flex:1;height:1px;background:var(--border);}
+.contact-step-label{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);}
+.contact-form{display:flex;flex-direction:column;gap:20px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.form-group{display:flex;flex-direction:column;gap:8px;}
+.form-group label{font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-muted);}
+.form-group label .req{color:var(--orange);}
+.form-group input,.form-group textarea{background:transparent;border:none;border-bottom:1.5px solid var(--border);padding:12px 0;font-family:'DM Sans',sans-serif;font-size:.95rem;color:var(--dark);outline:none;transition:border-color .2s;}
+.form-group input:focus,.form-group textarea:focus{border-color:var(--orange);}
+.form-group textarea{resize:vertical;min-height:100px;}
+.project-types{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px;}
+.pt-btn{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;padding:7px 16px;border:1px solid var(--border);border-radius:50px;cursor:pointer;background:white;color:var(--dark);transition:all .2s;}
+.pt-btn:hover,.pt-btn.sel{background:var(--dark);color:white;border-color:var(--dark);}
+.form-submit{display:inline-flex;align-items:center;gap:10px;background:var(--orange);color:white;border:none;padding:16px 36px;border-radius:50px;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:background .2s,transform .2s,box-shadow .2s;align-self:flex-start;overflow:hidden;}
+.form-submit:hover{background:var(--dark);transform:translateY(-3px);box-shadow:0 12px 30px rgba(232,81,26,.3);}
+
+/* FOOTER */
+footer{background:var(--dark);padding:80px 60px 50px;color:white;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:end;}
+.footer-headline{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:700;line-height:1.15;margin-bottom:40px;opacity:0;transform:translateY(28px);transition:opacity .8s,transform .8s;}
+.footer-headline.v{opacity:1;transform:none;}
+.footer-headline .italic{font-style:italic;color:var(--orange);}
+.footer-contact-items{display:flex;flex-direction:column;gap:16px;margin-bottom:10px;}
+.footer-contact-row{display:flex;align-items:center;gap:16px;}
+.footer-contact-label{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.3);width:60px;flex-shrink:0;}
+.footer-contact-val{font-size:1rem;color:white;text-decoration:none;transition:color .2s;}
+.footer-contact-val:hover{color:var(--orange);}
+.footer-right{text-align:right;}
+.footer-socials{display:flex;flex-direction:column;gap:14px;align-items:flex-end;margin-bottom:50px;}
+.footer-socials a{font-size:.95rem;color:rgba(255,255,255,.55);text-decoration:none;transition:color .2s,transform .2s;display:inline-block;}
+.footer-socials a:hover{color:white;transform:translateX(-5px);}
+.footer-copy{font-size:.78rem;color:rgba(255,255,255,.25);line-height:1.6;}
+
+/* FLOATING CTA */
+.floating-cta{position:fixed;bottom:30px;right:30px;z-index:99;background:var(--orange);color:white;padding:14px 22px;border-radius:50px;font-size:.78rem;font-weight:500;letter-spacing:.06em;text-decoration:none;display:flex;align-items:center;gap:8px;box-shadow:0 8px 30px rgba(232,81,26,.35);animation:ctaFloat 3s ease-in-out infinite;}
+@keyframes ctaFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+.floating-cta:hover{transform:translateY(-8px)!important;background:var(--dark);box-shadow:0 16px 40px rgba(0,0,0,.25);}
+
+/* RIPPLE */
+.ripple{position:fixed;width:6px;height:6px;border-radius:50%;background:var(--orange);pointer-events:none;z-index:9997;transform:translate(-50%,-50%) scale(0);animation:rOut .7s ease forwards;}
+@keyframes rOut{to{transform:translate(-50%,-50%) scale(22);opacity:0;}}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  nav{padding:18px 24px;}
+  .nav-links{display:none;}
+  section{padding:70px 24px;}
+  #home{grid-template-columns:1fr;padding:120px 24px 60px;}
+  .hero-images{height:320px;margin-bottom:20px;}
+  .hero-img-main{width:200px;height:280px;}
+  .hero-img-secondary{width:160px;height:200px;left:130px;top:100px;}
+  .hero-blob{width:160px;height:160px;left:110px;top:40px;}
+  #about{grid-template-columns:1fr;}
+  .about-image{height:350px;max-width:100%;}
+  .skills-grid{grid-template-columns:1fr 1fr;}
+  #email-arch{padding:70px 24px;}
+  .arch-step{grid-template-columns:55px 140px 1fr;gap:18px;}
+  .tools-scroll-wrap{margin:0 -24px;}
+  .exp-layout{grid-template-columns:1fr;}
+  .work-grid{grid-template-columns:1fr;}
+  .contact-layout{grid-template-columns:1fr;}
+  footer{grid-template-columns:1fr;}
+  .footer-right{text-align:left;}
+  .footer-socials{align-items:flex-start;}
+}
+</style>
+</head>
+<body>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<div id="progress"></div>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-name" id="loaderName"></div>
+  <div class="loader-sub">Marketing &amp; Content Strategist</div>
+  <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#home" class="nav-logo">Diana <em>Musau</em></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#tools">Tools</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#contact" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- MARQUEE -->
+<div class="marquee-bar">
+  <div class="marquee-track" id="mTrack"></div>
+</div>
+
+<!-- HERO -->
+<section id="home">
+  <div class="hero-images">
+    <div class="hero-blob"></div>
+    <img class="hero-img-main" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&q=80" alt="Diana Musau">
+    <img class="hero-img-secondary" src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=300&q=80" alt="Diana Musau">
+  </div>
+  <div class="hero-text">
+    <p class="hero-location">Marketing &amp; Content Strategist, Nairobi</p>
+    <h1 class="hero-headline">
+      <span class="hw">CONTENT</span><br>
+      <span class="hw" style="transition-delay:.1s">THAT IS</span><br>
+      <span class="hw orange" id="scramble" style="transition-delay:.22s">EVERYWHERE.</span>
+    </h1>
+    <p class="hero-tagline">Strategy that moves people. Results that move brands.</p>
+    <p class="hero-desc">Hi, I'm <strong>Diana Musau</strong>, a marketing and content strategist who builds brand presence across every channel — from scroll-stopping social content to email flows that convert.</p>
+    <a href="#work" class="hero-cta">EXPLORE MY WORK <span>↓</span></a>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-text">
+    <p class="section-label">About Me</p>
+    <h2 class="section-heading">Strategy is my <span class="italic">love language.</span></h2>
+    <p>I'm Diana Musau, a marketing and content strategist based in Nairobi, Kenya, with a passion for building brands that don't just exist online, but truly <em>live</em> there.</p>
+    <p>My work sits at the intersection of creativity and data. I believe the best marketing doesn't feel like marketing. It feels like a conversation, a story, a moment of genuine connection between a brand and the people it serves.</p>
+    <p>When I'm not strategizing, you'll find me at a local market, absorbing the texture of everyday life — because the best ideas never come from a screen.</p>
+    <div class="stats-row">
+      <div class="stat-item"><div class="stat-num" data-count="3" data-suffix="+">0</div><div class="stat-label">Years Experience</div></div>
+      <div class="stat-item"><div class="stat-num" data-count="12" data-suffix="+">0</div><div class="stat-label">Brands Worked With</div></div>
+      <div class="stat-item"><div class="stat-num" data-count="40" data-suffix="%+">0</div><div class="stat-label">Avg. Reach Growth</div></div>
+    </div>
+  </div>
+  <img class="about-image" src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=600&q=80" alt="Diana Musau">
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <p class="section-label">What I Do</p>
+  <h2 class="section-heading">My skills.</h2>
+  <div class="skills-grid">
+    <div class="skill-card"><div class="skill-card-img-placeholder">✍️</div><span class="skill-num">01</span><div class="skill-body"><h3 class="skill-title">Content Strategy</h3><p class="skill-desc">Crafting editorial ecosystems that align brand voice with audience intent, from content calendars to full channel strategies.</p></div></div>
+    <div class="skill-card" style="transition-delay:.1s"><div class="skill-card-img-placeholder">📱</div><span class="skill-num">02</span><div class="skill-body"><h3 class="skill-title">Social Media Marketing</h3><p class="skill-desc">Building communities and driving engagement across Instagram, TikTok, LinkedIn, and X with scroll-stopping content.</p></div></div>
+    <div class="skill-card" style="transition-delay:.2s"><div class="skill-card-img-placeholder">📖</div><span class="skill-num">03</span><div class="skill-body"><h3 class="skill-title">Brand Storytelling</h3><p class="skill-desc">Translating brand DNA into narratives that resonate — across copy, campaigns, and every customer touchpoint.</p></div></div>
+    <div class="skill-card" style="transition-delay:.3s"><div class="skill-card-img-placeholder">📧</div><span class="skill-num">04</span><div class="skill-body"><h3 class="skill-title">Email Marketing</h3><p class="skill-desc">From segmentation to personalization, architecting email journeys that nurture, convert, and retain at scale.</p></div></div>
+    <div class="skill-card" style="transition-delay:.4s"><div class="skill-card-img-placeholder">🔍</div><span class="skill-num">05</span><div class="skill-body"><h3 class="skill-title">SEO, GEO &amp; AEO</h3><p class="skill-desc">Optimizing for discovery across search, local, and AI engines: technical SEO, keyword strategy, multi-channel visibility.</p></div></div>
+    <div class="skill-card" style="transition-delay:.5s"><div class="skill-card-img-placeholder">🗺️</div><span class="skill-num">06</span><div class="skill-body"><h3 class="skill-title">Digital Strategy &amp; Planning</h3><p class="skill-desc">Mapping the intersection of business goals, audience behavior, and channel opportunity into actionable roadmaps.</p></div></div>
+  </div>
+</section>
+
+<!-- EMAIL ARCH -->
+<section id="email-arch">
+  <p class="section-label" style="color:var(--orange)">Email Architecture</p>
+  <h2 class="section-heading" style="color:white;">From broad reach<br>to <span class="italic">individual</span> resonance.</h2>
+  <p style="color:rgba(255,255,255,.5);font-size:.95rem;max-width:500px;line-height:1.7;margin-bottom:60px;">A five-step framework for email programs that nurture, convert, and retain without sounding like a robot.</p>
+  <div>
+    <div class="arch-step"><div class="arch-num">01</div><div><div class="arch-step-title">Segmentation</div><div class="arch-step-sub">Know Your Audience</div></div><div><p class="arch-step-desc">Breaking down broad audiences into meaningful segments based on behavior, demographics, and engagement patterns.</p><div class="arch-tags"><span class="arch-tag">Behavioral clustering</span><span class="arch-tag">Demographic profiling</span><span class="arch-tag">Purchase history</span></div></div></div>
+    <div class="arch-step" style="transition-delay:.1s"><div class="arch-num">02</div><div><div class="arch-step-title">The Journey</div><div class="arch-step-sub">Map The Path</div></div><div><p class="arch-step-desc">Designing automated email sequences that guide each segment through awareness, consideration, and conversion.</p><div class="arch-tags"><span class="arch-tag">Welcome flows</span><span class="arch-tag">Nurture sequences</span><span class="arch-tag">Re-engagement triggers</span></div></div></div>
+    <div class="arch-step" style="transition-delay:.2s"><div class="arch-num">03</div><div><div class="arch-step-title">Personalization</div><div class="arch-step-sub">Individual Resonance</div></div><div><p class="arch-step-desc">Transforming generic sends into 1-to-1 conversations with dynamic content, personalized timing, and tailored offers.</p><div class="arch-tags"><span class="arch-tag">Dynamic content blocks</span><span class="arch-tag">Send-time optimization</span><span class="arch-tag">A/B testing</span></div></div></div>
+    <div class="arch-step" style="transition-delay:.3s"><div class="arch-num">04</div><div><div class="arch-step-title">Retention</div><div class="arch-step-sub">Build Loyalty</div></div><div><p class="arch-step-desc">Turning one-time buyers into advocates through lifecycle campaigns, loyalty triggers, and feedback loops.</p><div class="arch-tags"><span class="arch-tag">Win-back campaigns</span><span class="arch-tag">Loyalty programs</span><span class="arch-tag">Post-purchase nurture</span></div></div></div>
+    <div class="arch-step" style="transition-delay:.4s"><div class="arch-num">05</div><div><div class="arch-step-title">Optimization</div><div class="arch-step-sub">Measure &amp; Refine</div></div><div><p class="arch-step-desc">Continuously analyzing open rates, click-throughs, and revenue attribution to refine every touchpoint.</p><div class="arch-tags"><span class="arch-tag">Revenue attribution</span><span class="arch-tag">Cohort analysis</span><span class="arch-tag">Deliverability</span></div></div></div>
+  </div>
+</section>
+
+<!-- TOOLS -->
+<section id="tools">
+  <p class="section-label">My Tech Stack</p>
+  <h2 class="section-heading">My tech stack.</h2>
+  <p class="tools-sub">The instruments behind every campaign.</p>
+  <div class="tools-scroll-wrap">
+    <div class="tools-row" id="tRow1"></div>
+    <div style="height:16px"></div>
+    <div class="tools-row rev" id="tRow2"></div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <p class="section-label">Where I've Been</p>
+  <h2 class="section-heading">Experience.</h2>
+  <div class="exp-layout">
+    <div class="exp-sidebar">
+      <div class="exp-tab active" onclick="showExp('st',this)"><div class="exp-tab-left"><div class="exp-tab-icon">🏫</div><div><div class="exp-tab-name">SchoolTry</div><div class="exp-tab-role">Marketing Executive</div></div></div><span class="exp-arrow">→</span></div>
+      <div class="exp-tab" onclick="showExp('ss',this)" style="transition-delay:.1s"><div class="exp-tab-left"><div class="exp-tab-icon">🌍</div><div><div class="exp-tab-name">SisterSpeaks Global</div><div class="exp-tab-role">Marketing Volunteer</div></div></div><span class="exp-arrow">→</span></div>
+      <div class="exp-tab" onclick="showExp('ai',this)" style="transition-delay:.2s"><div class="exp-tab-left"><div class="exp-tab-icon">🎓</div><div><div class="exp-tab-name">Aiducation International Kenya</div><div class="exp-tab-role">Comms &amp; Marketing Associate</div></div></div><span class="exp-arrow">→</span></div>
+    </div>
+    <div class="exp-content-area">
+      <div class="exp-entry active" id="exp-st">
+        <p class="exp-meta">EdTech · Marketing Executive · Oct 2023 – Sep 2025</p>
+        <h3 class="exp-company">SchoolTry</h3>
+        <p class="exp-position">Marketing Executive</p>
+        <ul class="exp-bullets">
+          <li style="animation-delay:.05s">Led marketing strategy and brand communication for the edtech startup.</li>
+          <li style="animation-delay:.1s">Created and executed digital campaigns engaging educators, parents, and students.</li>
+          <li style="animation-delay:.15s">Managed social media growth, paid advertising, and partnership outreach.</li>
+          <li style="animation-delay:.2s">Collaborated with cross-functional teams to align brand messaging with company goals.</li>
+          <li style="animation-delay:.25s">Leveraged content marketing and storytelling to build brand trust and visibility.</li>
+        </ul>
+      </div>
+      <div class="exp-entry" id="exp-ss">
+        <p class="exp-meta">Non-Profit · Marketing Volunteer</p>
+        <h3 class="exp-company">SisterSpeaks Global</h3>
+        <p class="exp-position">Marketing Volunteer</p>
+        <ul class="exp-bullets">
+          <li style="animation-delay:.05s">Supported brand awareness campaigns for a global women's empowerment organization.</li>
+          <li style="animation-delay:.1s">Developed social media content that amplified the organization's mission and reach.</li>
+          <li style="animation-delay:.15s">Contributed to community engagement initiatives and storytelling campaigns.</li>
+        </ul>
+      </div>
+      <div class="exp-entry" id="exp-ai">
+        <p class="exp-meta">Education · Communications &amp; Marketing Associate</p>
+        <h3 class="exp-company">Aiducation International Kenya</h3>
+        <p class="exp-position">Communications &amp; Marketing Associate</p>
+        <ul class="exp-bullets">
+          <li style="animation-delay:.05s">Managed communications and marketing for a scholarship-focused education NGO.</li>
+          <li style="animation-delay:.1s">Produced donor-facing content, impact reports, and campaign materials.</li>
+          <li style="animation-delay:.15s">Coordinated social media presence and stakeholder engagement activities.</li>
+          <li style="animation-delay:.2s">Supported fundraising campaigns through compelling narrative and visual content.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section id="work">
+  <p class="section-label">Selected Work</p>
+  <h2 class="section-heading">My work.</h2>
+  <div class="work-grid">
+    <div class="work-card wc-1"><div class="work-card-placeholder">🛍️</div><span class="work-badge">+40% Reach</span><div class="work-card-overlay"><p class="work-card-client">Joana K Cosmetics</p><h3 class="work-card-title">#JKIsEverywhere Campaign</h3><div class="work-card-tags"><span class="work-tag">Brand Campaign</span><span class="work-tag">Content Strategy</span><span class="work-tag">Art Direction</span></div></div></div>
+    <div class="work-card wc-2" style="transition-delay:.1s"><div class="work-card-placeholder">💄</div><span class="work-badge">4 Segments</span><div class="work-card-overlay"><p class="work-card-client">Joana K Cosmetics</p><h3 class="work-card-title">Email Marketing &amp; Personalization</h3><div class="work-card-tags"><span class="work-tag">Email Marketing</span><span class="work-tag">Segmentation</span><span class="work-tag">Lifecycle Strategy</span></div></div></div>
+    <div class="work-card wc-3" style="transition-delay:.2s"><div class="work-card-placeholder">🧴</div><span class="work-badge">3x Engagement</span><div class="work-card-overlay"><p class="work-card-client">Beauty &amp; Wellness</p><h3 class="work-card-title">Skincare Brand Social Strategy</h3><div class="work-card-tags"><span class="work-tag">Social Media</span><span class="work-tag">Content Calendar</span><span class="work-tag">UGC Strategy</span></div></div></div>
+    <div class="work-card wc-4" style="transition-delay:.3s"><div class="work-card-placeholder">💋</div><span class="work-badge">+65% Sales</span><div class="work-card-overlay"><p class="work-card-client">Joana K Cosmetics</p><h3 class="work-card-title">Joana K Cosmetics Content Grid</h3><div class="work-card-tags"><span class="work-tag">Brand Storytelling</span><span class="work-tag">Visual Identity</span><span class="work-tag">Product Launch</span></div></div></div>
+    <div class="work-card wc-5" style="transition-delay:.4s;grid-column:1/-1"><div class="work-card-placeholder" style="height:200px">🌶️</div><span class="work-badge work-badge-alt">Brand Launch</span><div class="work-card-overlay"><p class="work-card-client">Dama Treats</p><h3 class="work-card-title">Karafire Social Media Management</h3><div class="work-card-tags"><span class="work-tag">Social Media Mgmt</span><span class="work-tag">Food &amp; Beverage</span><span class="work-tag">Brand Awareness</span></div></div></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-layout">
+    <div class="contact-left">
+      <p class="section-label">Start A Project</p>
+      <h2 class="section-heading">Tell me about your <span class="italic">brand.</span></h2>
+      <p class="contact-desc">Share a few details and I'll come back within 48 hours with a point of view, a rough scope, and the next step.</p>
+      <div class="contact-process">
+        <div class="contact-step"><span class="contact-step-num">01</span><span class="contact-step-line"></span><span class="contact-step-label">Share The Brief</span></div>
+        <div class="contact-step"><span class="contact-step-num">02</span><span class="contact-step-line"></span><span class="contact-step-label">Discovery Call</span></div>
+        <div class="contact-step"><span class="contact-step-num">03</span><span class="contact-step-line"></span><span class="contact-step-label">Strategy &amp; Launch</span></div>
+      </div>
+    </div>
+    <form class="contact-form" onsubmit="handleSubmit(event)">
+      <div class="form-row">
+        <div class="form-group"><label>Your Name <span class="req">*</span></label><input type="text" placeholder="Jane Doe" required></div>
+        <div class="form-group"><label>Email <span class="req">*</span></label><input type="email" placeholder="jane@brand.com" required></div>
+      </div>
+      <div class="form-group"><label>Company / Brand</label><input type="text" placeholder="Your brand name"></div>
+      <div class="form-group"><label>Project Type <span class="req">*</span></label><div class="project-types"><button type="button" class="pt-btn" onclick="this.classList.toggle('sel')">Brand Strategy</button><button type="button" class="pt-btn" onclick="this.classList.toggle('sel')">Campaign Launch</button><button type="button" class="pt-btn" onclick="this.classList.toggle('sel')">Content Strategy</button><button type="button" class="pt-btn" onclick="this.classList.toggle('sel')">Email &amp; CRM</button><button type="button" class="pt-btn" onclick="this.classList.toggle('sel')">Social &amp; Community</button><button type="button" class="pt-btn" onclick="this.classList.toggle('sel')">SEO / GEO</button><button type="button" class="pt-btn" onclick="this.classList.toggle('sel')">Other</button></div></div>
+      <div class="form-group"><label>Tell me about your project <span class="req">*</span></label><textarea placeholder="What are you working on? What's the goal?" required></textarea></div>
+      <button type="submit" class="form-submit">Send Brief →</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <h2 class="footer-headline">Let's build something <span class="italic">intentional.</span></h2>
+    <div class="footer-contact-items">
+      <div class="footer-contact-row"><span class="footer-contact-label">EMAIL</span><a href="mailto:dianamsau19@gmail.com" class="footer-contact-val">dianamsau19@gmail.com</a></div>
+      <div class="footer-contact-row"><span class="footer-contact-label">PHONE</span><a href="tel:+254768007039" class="footer-contact-val">+254 768 007 039</a></div>
+    </div>
+  </div>
+  <div class="footer-right">
+    <div class="footer-socials"><a href="#">LinkedIn</a><a href="#">Instagram</a><a href="#">X (Twitter)</a></div>
+    <p class="footer-copy">© 2026 Diana Musau. All rights reserved.<br>Nairobi, Kenya.</p>
+  </div>
+</footer>
+
+<a href="#contact" class="floating-cta">💬 GET IN TOUCH</a>
+
+<script>
+// ── CURSOR ──
+const cur=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function animR(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animR);})();
+
+// hover states
+document.querySelectorAll('a,button,.tool-card,.skill-card,.work-card,.exp-tab').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.width='22px';cur.style.height='22px';ring.style.width='60px';ring.style.height='60px';ring.style.opacity='.25';});
+  el.addEventListener('mouseleave',()=>{cur.style.width='12px';cur.style.height='12px';ring.style.width='40px';ring.style.height='40px';ring.style.opacity='.5';});
+});
+
+// click ripple
+document.addEventListener('click',e=>{
+  const r=document.createElement('div');r.className='ripple';r.style.left=e.clientX+'px';r.style.top=e.clientY+'px';
+  document.body.appendChild(r);setTimeout(()=>r.remove(),700);
+});
+
+// ── LOADER ──
+const loaderName=document.getElementById('loaderName');
+'Diana Musau'.split('').forEach((c,i)=>{
+  const s=document.createElement('span');s.className='lc';
+  s.textContent=c===' '?'\u00A0':c;s.style.animationDelay=(i*.055)+'s';
+  loaderName.appendChild(s);
+});
+setTimeout(()=>{
+  document.getElementById('loader').classList.add('hide');
+  // trigger hero
+  document.querySelectorAll('.hero-location,.hero-tagline,.hero-desc,.hero-cta').forEach(el=>el.classList.add('v'));
+  document.querySelectorAll('.hw').forEach(el=>el.classList.add('v'));
+  setTimeout(()=>scramble(document.getElementById('scramble'),'EVERYWHERE.'),700);
+},2100);
+
+// ── TEXT SCRAMBLE ──
+function scramble(el,target){
+  const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%&*';
+  let i=0;
+  const t=setInterval(()=>{
+    el.textContent=target.split('').map((_,j)=>j<i?target[j]:chars[Math.floor(Math.random()*chars.length)]).join('');
+    if(i>=target.length)clearInterval(t);i+=.45;
+  },38);
+}
+
+// ── SCROLL PROGRESS + NAV ──
+const prog=document.getElementById('progress'),nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{
+  prog.style.width=(window.scrollY/(document.body.scrollHeight-window.innerHeight)*100)+'%';
+  nav.classList.toggle('scrolled',window.scrollY>60);
+});
+
+// ── MARQUEE ──
+const items=['Content Strategy','Social Media Marketing','Brand Storytelling','Email Marketing','SEO & GEO','Digital Strategy','Campaign Planning','Content Creation','Brand Positioning','Audience Growth'];
+const mT=document.getElementById('mTrack');
+[...items,...items].forEach(it=>{
+  const s=document.createElement('span');s.textContent=it;mT.appendChild(s);
+  const d=document.createElement('span');d.className='dot';d.textContent='✦';mT.appendChild(d);
+});
+
+// ── PARTICLES ──
+const hero=document.getElementById('home');
+for(let i=0;i<16;i++){
+  const p=document.createElement('div');p.className='particle';
+  const sz=Math.random()*18+5;
+  p.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;background:${Math.random()>.5?'var(--orange)':'var(--dark)'};animation-duration:${Math.random()*14+7}s;animation-delay:${Math.random()*10}s;`;
+  hero.appendChild(p);
+}
+
+// ── TOOLS SCROLL ROWS ──
+const t1=[{i:'🐵',n:'Mailchimp'},{i:'🟠',n:'HubSpot'},{i:'📊',n:'Google Analytics'},{i:'🎨',n:'Canva'},{i:'🎭',n:'Figma'},{i:'🔵',n:'Google Ads'},{i:'💬',n:'Slack'}];
+const t2=[{i:'📝',n:'Notion'},{i:'📘',n:'Meta Ads'},{i:'🔎',n:'SEMrush'},{i:'📅',n:'Buffer'},{i:'📐',n:'Adobe XD'},{i:'🤖',n:'ChatGPT'},{i:'📌',n:'Trello'}];
+function buildRow(arr,id){
+  const el=document.getElementById(id);
+  [...arr,...arr,...arr].forEach(t=>{
+    const c=document.createElement('div');c.className='tool-card';
+    c.innerHTML=`<div class="tool-icon">${t.i}</div><div class="tool-name">${t.n}</div>`;
+    el.appendChild(c);
+  });
+}
+buildRow(t1,'tRow1');buildRow(t2,'tRow2');
+
+// ── INTERSECTION OBSERVER ──
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('v');
+      if(e.target.dataset.count)animCount(e.target);
+    }
+  });
+},{threshold:.12});
+
+document.querySelectorAll(
+  '.section-label,.section-heading,.about-text p,.about-image,.stats-row,.skill-card,.arch-step,.exp-tab,.work-card,.footer-headline'
+).forEach(el=>io.observe(el));
+
+document.querySelectorAll('.stat-num[data-count]').forEach(el=>io.observe(el));
+
+// stagger about paragraphs
+const aio=new IntersectionObserver(([e])=>{
+  if(e.isIntersecting)e.target.querySelectorAll('p[class=""],.about-text p').forEach((p,i)=>{p.style.transitionDelay=(i*.12)+'s';p.classList.add('v');});
+},{threshold:.1});
+document.querySelectorAll('.about-text').forEach(el=>aio.observe(el));
+
+// ── COUNTER ──
+function animCount(el){
+  const target=parseInt(el.dataset.count),suffix=el.dataset.suffix||'';
+  let cur=0;const step=target/45;
+  const t=setInterval(()=>{cur=Math.min(cur+step,target);el.textContent=Math.floor(cur)+suffix;if(cur>=target)clearInterval(t);},28);
+}
+
+// ── TILT on work cards ──
+document.querySelectorAll('.work-card').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+    card.style.transform=`perspective(700px) rotateY(${x*12}deg) rotateX(${-y*12}deg) scale(1.04)`;
+  });
+  card.addEventListener('mouseleave',()=>{card.style.transform='';});
+});
+
+// ── MAGNETIC buttons ──
+document.querySelectorAll('.nav-cta,.form-submit,.floating-cta').forEach(b=>{
+  b.addEventListener('mousemove',e=>{
+    const r=b.getBoundingClientRect();
+    b.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.28}px,${(e.clientY-r.top-r.height/2)*.28}px)`;
+  });
+  b.addEventListener('mouseleave',()=>{b.style.transform='';});
+});
+
+// ── EXPERIENCE ──
+function showExp(id,el){
+  document.querySelectorAll('.exp-entry').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.exp-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('exp-'+id).classList.add('active');
+  el.classList.add('active');
+}
+
+function handleSubmit(e){
+  e.preventDefault();
+  const b=e.target.querySelector('.form-submit');
+  b.textContent='✓ Brief Sent!';b.style.background='#237a37';
+  setTimeout(()=>{b.textContent='Send Brief →';b.style.background='';},3000);
+}
+</script>
+</body>
+</html>
